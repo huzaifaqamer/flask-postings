@@ -1,13 +1,14 @@
 from flask import Flask
 from flask_migrate import Migrate
-from flask_user import UserManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
 from config.get_configs import get_app_config
 
 
 db = SQLAlchemy()
 migrate = Migrate()
+ma = Marshmallow()
 
 def create_app():
     app = Flask(__name__)
@@ -18,12 +19,9 @@ def create_app():
 
 
 def initialize_extensions(app):
-    from api.auth.models import User
-
     db.init_app(app)  # sqlalchemy
     migrate.init_app(app, db)  # migrate
-    user_manager = UserManager(app, db, User)  # flask_user
-
+    ma.init_app(app)  # marshmallow
 
 def register_blueprints(app):
     from api.auth import auth_bp
