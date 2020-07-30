@@ -5,7 +5,10 @@ from marshmallow import validates_schema, ValidationError
 from marshmallow.validate import Length
 
 from .services import create_user
+from .services import get_or_create_token
+from .security import verify_password
 from .validators import username_is_unique
+from .selectors import get_user_by_username
 
 
 class Register(Resource):
@@ -50,8 +53,38 @@ class Register(Resource):
 
 
 class Login(Resource):
-    def get(self):
-        return {'message': 'Logged In'}
+
+    class InputSchema(Schema):
+        username = fields.Str(required=True)
+        password = fields.Str(required=True)
+
+        @validates_schema
+        def validate_username_password(self, data, **kwargs):
+            user = get_user_by_username(data['username'])
+            if user:
+                if not verify_password(data['password'], user.password):
+                    raise ValidationError('Incorrect Username or Password')
+
+            else:
+                raise ValidationError('Incorrect Username or Password')
+
+
+    class OutputSchema(Schema):
+        auth_token = fields.Str(required=True)
+
+
+    def post(self):
+        input_schema = Login.InputSchema()
+        errors = input_schema.validate(request.form)
+
+        if errors:
+            if '_schema' in errors:
+                return {'error': 'Incorrect Username or Password'}, 400
+            return errors, 400
+
+        token = get_or_create_token(request.form['username'])
+        output_schema = Login.OutputSchema()
+        return output_schema.dump(token), 200
 
 
 class Logout(Resource):

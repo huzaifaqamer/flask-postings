@@ -1,9 +1,9 @@
 from marshmallow import ValidationError
 
-from .models import User
+from .selectors import get_user_by_username
 
 
 def username_is_unique(data):
-    user = User.query.filter_by(username=data).first()
+    user = get_user_by_username(data)
     if user:
         raise ValidationError('username already exists')
