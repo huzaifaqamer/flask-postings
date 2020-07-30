@@ -16,12 +16,6 @@ class BaseConfig():
     SQLALCHEMY_DATABASE_URI = f'sqlite:///{basedir}/sqlite.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    # Flask-User settings
-    USER_APP_NAME = "Postings App" 
-    USER_ENABLE_EMAIL = False      # Disable email authentication
-    USER_ENABLE_USERNAME = True    # Enable username authentication
-    USER_REQUIRE_RETYPE_PASSWORD = True
-
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
