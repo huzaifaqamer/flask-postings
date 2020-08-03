@@ -1,6 +1,6 @@
 from sqlalchemy.orm import joinedload
 
-from .models import User, Token
+from .models import User
 
 
 def get_user_by_username(username):
