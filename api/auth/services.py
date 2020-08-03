@@ -47,3 +47,10 @@ def get_or_create_token(username):
         token = user.token
 
     return token
+
+
+def delete_user_token(user):
+    token = Token.query.filter_by(user_id=user.id).first()
+    
+    db.session.delete(token)
+    db.session.commit()

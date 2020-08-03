@@ -4,8 +4,10 @@ from marshmallow import fields, Schema
 from marshmallow import validates_schema, ValidationError
 from marshmallow.validate import Length
 
+from api.common import token_required
 from .services import create_user
 from .services import get_or_create_token
+from .services import delete_user_token
 from .security import verify_password
 from .validators import username_is_unique
 from .selectors import get_user_by_username
@@ -88,5 +90,7 @@ class Login(Resource):
 
 
 class Logout(Resource):
-    def get(self):
-        return {'message': 'Logged Out'}
+    @token_required
+    def delete(self):
+        delete_user_token(request.user)
+        return '', 204
