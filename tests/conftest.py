@@ -39,3 +39,23 @@ def init_database(test_client):
     yield db
 
     db.drop_all()
+
+
+@pytest.fixture(scope='module')
+def new_user(init_database):
+    new_user = User(username='new_testing_user', password='secret_password')
+    db.session.add(new_user)
+    db.session.commit()
+
+    return new_user
+
+
+@pytest.fixture(scope='module')
+def new_user_with_token(init_database):
+    new_user = User(username='new_user_with_token', password='secret_password')
+    token = Token(auth_token='secret_token', user=new_user)
+    db.session.add(new_user)
+    db.session.add(token)
+    db.session.commit()
+    
+    return new_user
