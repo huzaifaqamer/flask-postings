@@ -46,7 +46,7 @@ def test_username_must_be_correct(test_client, user_with_hashed_password):
     assert b'Incorrect Username or Password' in response.data
 
 
-def test_username_is_required(test_client, user_with_hashed_password):
+def test_username_is_required(test_client, init_database):
     request_data = {
         'password': 'secret_password'
     }
@@ -59,7 +59,7 @@ def test_username_is_required(test_client, user_with_hashed_password):
     assert b'Missing data for required field.' in response.data
 
 
-def test_password_is_required(test_client, user_with_hashed_password):
+def test_password_is_required(test_client, init_database):
     request_data = {
         'username': 'failing_username'
     }
