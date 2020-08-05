@@ -3,6 +3,7 @@ import pytest
 from api import create_app
 from api import db
 from api.auth.models import User, Token
+from api.auth.services import create_user
 
 
 @pytest.fixture(scope='module')
@@ -55,6 +56,17 @@ def new_user_with_token(init_database):
     new_user = User(username='new_user_with_token', password='secret_password')
     token = Token(auth_token='secret_token', user=new_user)
     db.session.add(new_user)
+    db.session.add(token)
+    db.session.commit()
+    
+    return new_user
+
+
+@pytest.fixture(scope='module')
+def user_with_hashed_password(init_database):
+    user_data = dict(username='new_user_with_hashed_password', password='secret_password')
+    new_user = create_user(**user_data)
+    token = Token(auth_token='secret_token', user=new_user)
     db.session.add(token)
     db.session.commit()
     
