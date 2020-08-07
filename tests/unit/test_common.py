@@ -71,3 +71,15 @@ def test_method_called_on_valid_token(init_database):
         func = token_required(m)
         response = func(m)
         assert m.called
+
+
+def test_user_is_added_to_request_on_valid_token(init_database):
+    mock_request = mock.MagicMock()
+    mock_request.headers = {'Authorization': 'Token secret_token_1'}
+
+    with mock.patch('api.common.request', mock_request):
+        m = mock.Mock()
+        func = token_required(m)
+        response = func(m)
+        assert hasattr(mock_request, 'user')
+        assert isinstance(mock_request.user, User)
