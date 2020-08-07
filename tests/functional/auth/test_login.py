@@ -7,7 +7,7 @@ def test_can_login_with_valid_credentials(test_client, user_with_hashed_password
         'password': 'secret_password'
     }
     expected_response = {
-        'auth_token': 'secret_token'
+        'auth_token': 'secret_token_3'
     }
 
     response = test_client.post(

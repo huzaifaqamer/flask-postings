@@ -22,7 +22,7 @@ def test_given_username_get_user_with_token_returns_user_with_token(init_databas
     assert isinstance(user, User)
     assert user.username == 'testing_user1'
     assert hasattr(user, 'token')
-    assert user.token.auth_token == 'secret_token'
+    assert user.token.auth_token == 'secret_token_1'
 
 
 def test_given_invalid_username_get_user_with_token_returns_none(init_database):

@@ -31,7 +31,7 @@ def init_database(test_client):
 
     # insert data
     user = User(username='testing_user1', password='secret_password')
-    token = Token(auth_token='secret_token', user=user)
+    token = Token(auth_token='secret_token_1', user=user)
 
     db.session.add(user)
     db.session.add(token)
@@ -54,7 +54,7 @@ def new_user(init_database):
 @pytest.fixture(scope='module')
 def new_user_with_token(init_database):
     new_user = User(username='new_user_with_token', password='secret_password')
-    token = Token(auth_token='secret_token', user=new_user)
+    token = Token(auth_token='secret_token_2', user=new_user)
     db.session.add(new_user)
     db.session.add(token)
     db.session.commit()
@@ -66,7 +66,7 @@ def new_user_with_token(init_database):
 def user_with_hashed_password(init_database):
     user_data = dict(username='new_user_with_hashed_password', password='secret_password')
     new_user = create_user(**user_data)
-    token = Token(auth_token='secret_token', user=new_user)
+    token = Token(auth_token='secret_token_3', user=new_user)
     db.session.add(token)
     db.session.commit()
     
