@@ -25,6 +25,8 @@ def initialize_extensions(app):
 
 def register_blueprints(app):
     from api.auth import auth_bp
+    from api.post import post_bp
 
     app.register_blueprint(auth_bp)
+    app.register_blueprint(post_bp)
 
