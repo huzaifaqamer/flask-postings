@@ -12,3 +12,7 @@ It is a practice Flask RESTful application. It performs the following fuctionali
     - List API has a filter to only show authenticated user's posts.
     - Retrieve API which fetches published posts only.
     - Retrieve API should count the number of views by non-authors.
+
+
+#### Running tests
+python -m pytest -v
