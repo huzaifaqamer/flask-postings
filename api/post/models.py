@@ -1,7 +1,10 @@
 from sqlalchemy_utils.types.choice import ChoiceType
+from sqlalchemy_utils import force_auto_coercion
 
 from api import db
 from api.auth.models import User
+
+force_auto_coercion()
 
 
 class Post(db.Model):
