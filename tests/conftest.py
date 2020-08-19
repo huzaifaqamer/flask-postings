@@ -71,3 +71,16 @@ def user_with_hashed_password(init_database):
     db.session.commit()
     
     return new_user
+
+
+@pytest.fixture(scope='function')
+def post_user(init_database):
+    user = User(username='post_user', password='secret_password')
+    db.session.add(user)
+    db.session.commit()
+
+    yield user
+
+    db.session.rollback()
+    User.query.delete()
+    db.session.commit()
