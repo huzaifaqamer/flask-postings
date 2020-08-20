@@ -87,3 +87,20 @@ def test_cascade_delete(post_user):
 
     new_post = Post.query.filter_by(title='Testing').first()
     assert new_post is None
+
+
+def test_modified_date_changes(post_user):
+    author = get_user_by_username('post_user')
+    post = Post(title='Testing', body='Test Body', author=author)
+    db.session.add(post)
+    db.session.commit()
+
+    assert post.modified_on is not None
+
+    old_value = post.modified_on
+    # update the post
+    post.title = 'Published'
+    db.session.commit()
+
+    timedelta = post.modified_on - old_value
+    assert timedelta.microseconds > 0
