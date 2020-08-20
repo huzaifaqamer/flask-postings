@@ -1,3 +1,4 @@
+import datetime
 from sqlalchemy_utils.types.choice import ChoiceType
 from sqlalchemy_utils import force_auto_coercion
 
@@ -27,7 +28,7 @@ class Post(db.Model):
         nullable=False
     )
     created_on = db.Column(db.DateTime, server_default=db.func.now())
-    modified_on = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+    modified_on = db.Column(db.DateTime, server_default=db.func.now(), onupdate=datetime.datetime.utcnow)
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('user.id'),
