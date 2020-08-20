@@ -9,14 +9,14 @@ force_auto_coercion()
 
 
 class Post(db.Model):
-    DRAFT = u'D'
-    UNPUBLISHED = u'U'
-    PUBLISHED = u'P'
+    DRAFT = u'DRAFT'
+    UNPUBLISHED = u'UNPUBLISHED'
+    PUBLISHED = u'PUBLISHED'
 
     POST_STATUSES = [
-        (DRAFT, u'DRAFT'),
-        (UNPUBLISHED, u'UNPUBLISHED'),
-        (PUBLISHED, u'PUBLISHED')
+        (DRAFT, DRAFT),
+        (UNPUBLISHED, UNPUBLISHED),
+        (PUBLISHED, PUBLISHED)
     ]
 
     id = db.Column(db.Integer, primary_key=True)

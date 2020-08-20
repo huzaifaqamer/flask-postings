@@ -6,7 +6,7 @@ def create_post(
     title,
     body,
     author,
-    status=Post.DRAFT
+    status=None
 ):
     post = Post(
         title = title,
