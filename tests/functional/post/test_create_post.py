@@ -34,7 +34,6 @@ def test_user_should_be_logged_in_to_create_post(test_client, user_with_hashed_p
     assert 'created_on' in received_data
 
 
-
 def test_title_field_required(test_client, user_with_hashed_password):
     data = {
         'body': 'First post'

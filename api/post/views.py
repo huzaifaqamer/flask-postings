@@ -7,7 +7,7 @@ from .services import create_post
 from api.common import token_required
 
 
-class CreateRetrievePost(Resource):
+class ListCreatePost(Resource):
     
     class InputSchema(Schema):
         title = fields.Str(required=True)
@@ -23,7 +23,7 @@ class CreateRetrievePost(Resource):
 
     @token_required
     def post(self):
-        input_schema = CreateRetrievePost.InputSchema()
+        input_schema = ListCreatePost.InputSchema()
         errors = input_schema.validate(request.form)
 
         if errors:
@@ -35,5 +35,5 @@ class CreateRetrievePost(Resource):
             status=request.form.get('status'),
             author=request.user
         )
-        output_schema = CreateRetrievePost.OutputSchema()
+        output_schema = ListCreatePost.OutputSchema()
         return output_schema.dump(post), 201
