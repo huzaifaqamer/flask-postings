@@ -1,8 +1,12 @@
 import os
+import random
+import datetime
+
 import pytest
 from api import create_app
 from api import db
 from api.auth.models import User, Token
+from api.post.models import Post
 from api.auth.services import create_user
 
 
@@ -84,3 +88,39 @@ def post_user(init_database):
     db.session.rollback()
     User.query.delete()
     db.session.commit()
+
+
+def random_time():
+    start = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+    end = datetime.datetime.utcnow()
+
+    return start + datetime.timedelta(
+        # Get a random amount of seconds between `start` and `end`
+        seconds=random.randint(0, int((end - start).total_seconds())),
+    )
+
+@pytest.fixture(scope='module')
+def users_with_posts(init_database):
+    user1_data = dict(username='post_user1', password='secret_password')
+    user2_data = dict(username='post_user2', password='secret_password')
+    user1 = create_user(**user1_data)
+    user2 = create_user(**user2_data)
+    token1 = Token(auth_token='post_user1_token', user=user1)
+    token2 = Token(auth_token='post_user2_token', user=user2)
+    user1_post1 = Post(title='Draft Post', body='User 1', status=Post.DRAFT, author=user1, created_on=random_time())
+    user1_post2 = Post(title='Published Post', body='User 1', status=Post.PUBLISHED, author=user1, created_on=random_time())
+    user1_post3 = Post(title='Unpublished Post', body='User 1', status=Post.UNPUBLISHED, author=user1, created_on=random_time())
+    user2_post1 = Post(title='Draft Post', body='User 2', status=Post.DRAFT, author=user2, created_on=random_time())
+    user2_post2 = Post(title='Published Post', body='User 2', status=Post.PUBLISHED, author=user2, created_on=random_time())
+    user2_post3 = Post(title='Unpublished Post', body='User 2', status=Post.UNPUBLISHED, author=user2, created_on=random_time())
+    db.session.add(token1)
+    db.session.add(token2)
+    db.session.add(user1_post1)
+    db.session.add(user1_post2)
+    db.session.add(user1_post3)
+    db.session.add(user2_post1)
+    db.session.add(user2_post2)
+    db.session.add(user2_post3)
+    db.session.commit()
+    
+    return user1
