@@ -5,7 +5,7 @@ from flask import request
 from api.auth.models import User, Token
 
 
-def __get_user_from_token(token):
+def get_user_from_token(token):
     token = Token.query.filter_by(auth_token=token).join(User).first()
     if token:
         return token.user
@@ -28,7 +28,7 @@ def token_required(func):
                 if splitted_token[0] != 'Token':
                     return {'error': f"expected 'Token' but got '{splitted_token[0]}' in 'Authorization' header"}, 400
                 
-                user = __get_user_from_token(splitted_token[1])
+                user = get_user_from_token(splitted_token[1])
                 if user:
                     request.user = user
                     return func(*args, **kwargs)
