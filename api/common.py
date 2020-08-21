@@ -13,6 +13,24 @@ def get_user_from_token(token):
     return None
 
 
+def validate_token_header(token):
+    try:
+        splitted_token = token.split()
+        if splitted_token[0] != 'Token':
+            error = ({'error': f"expected 'Token' but got '{splitted_token[0]}' in 'Authorization' header"}, 400)
+            return None, error
+        
+        user = get_user_from_token(splitted_token[1])
+        if user:
+            return user, None
+
+        error = ({'error': 'Provided token is invalid'}, 401)
+        return None, error
+    except IndexError:
+        error = ({'error': 'Authorization token not provided'}, 401)
+        return None, error
+
+
 def token_required(func):
     """
     check request header for presence of 'Authorization'
@@ -23,19 +41,12 @@ def token_required(func):
     def inner_func(*args, **kwargs):
         token = request.headers.get('Authorization')
         if token:
-            try:
-                splitted_token = token.split()
-                if splitted_token[0] != 'Token':
-                    return {'error': f"expected 'Token' but got '{splitted_token[0]}' in 'Authorization' header"}, 400
-                
-                user = get_user_from_token(splitted_token[1])
-                if user:
-                    request.user = user
-                    return func(*args, **kwargs)
-
-                return {'error': 'Provided token is invalid'}, 401
-            except IndexError:
-                pass
+            user, error = validate_token_header(token)
+            if user:
+                request.user = user
+                return func(*args, **kwargs)
+            else:
+                return error[0], error[1]
         return {'error': 'Authorization token not provided'}, 401
 
     return inner_func
